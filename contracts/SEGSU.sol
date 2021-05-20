@@ -687,8 +687,6 @@ contract SEGSU is Context, IBEP20, Ownable {
     uint8 constant _adminTokenPercentage = 5;
     uint8 constant _mgmtTokenPercentage = 5;
     address public TEAM;
-    address public TEAM2;
-    address public TEAM3;
 
     mapping (address => uint256) private _rOwned;
     mapping (address => uint256) private _tOwned;
@@ -708,7 +706,7 @@ contract SEGSU is Context, IBEP20, Ownable {
     string private _symbol = "SEGS";
     uint8 private _decimals = 9;
     
-    uint256 public _taxFee = 5;
+    uint256 public _taxFee = 6;
     uint256 private _previousTaxFee = _taxFee;
     
     uint256 public _liquidityFee = 5;
@@ -744,13 +742,12 @@ contract SEGSU is Context, IBEP20, Ownable {
     
     constructor () public {
 
-
-        // Set team and dev wallet
-        setTeamAddress('Add first wallet here', 'Add second wallet here', 'Add third wallet here');
+        setTeamAddress(0xdA3D4B21a463a5940D733CbCE4E16f135Fe6703C);
 
         _rOwned[_msgSender()] = _rTotal;
 
         IPancakeRouter02 _pancakeRouter = IPancakeRouter02(0xD99D1c33F9fC3444f8101754aBC46c52416550D1);
+
          // Create a pancake pair for this new token
         pancakePair = IPancakeFactory(_pancakeRouter.factory())
             .createPair(address(this), _pancakeRouter.WETH());
@@ -762,7 +759,7 @@ contract SEGSU is Context, IBEP20, Ownable {
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[address(this)] = true;
 
-        burn(_numTokenToBurn);
+        // burn(_numTokenToBurn);
         
         emit Transfer(address(0), _msgSender(), _tTotal);
 
@@ -770,13 +767,9 @@ contract SEGSU is Context, IBEP20, Ownable {
 
     /* Sets the address that holds the 25% token
      */
-    function setTeamAddress(address _TEAM, address _TEAM2, address _TEAM3) public onlyOwner{
+    function setTeamAddress(address _TEAM) public onlyOwner{
         require(_TEAM != address(0), "SEGSU: approve to the zero address");
-        require(_TEAM2 != address(0), "SEGSU: approve to the zero address");
-        require(_TEAM3 != address(0), "SEGSU: approve to the zero address");
         TEAM = _TEAM;
-        TEAM2 = _TEAM2;
-        TEAM3 = _TEAM3;
     }
 
     function burn(uint256 amount) public{
